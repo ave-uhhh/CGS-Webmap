@@ -3,21 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Bebas Neue" rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel='stylesheet'>
     <title>Flood Management</title>
     <style>
-        header {
-            font-family:'Bebas Neue';
-            font-size: 1vw;
-            color: #fefefe;
-            top: 50%;
-            line-height: 1;
-            text-align: left;
-        }
-        body {
-            background-color: #5501fe;
-            font-family: 'Montserrat', sans-serif;
-            line-height: 1.6;
+         body {
             margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #5501fe;
         }
         nav {
             height: 100%;
@@ -29,6 +22,7 @@
             background: #000000;
             overflow-x: hidden;
             padding-top: 60px;
+            border: 2px solid #ffffff
         }
         nav a {
             color: #ffffff;
@@ -46,60 +40,78 @@
             font-weight: bold;
             text-decoration: none;
         }
-        main {
-            margin-left: 25%; /* Push content to the right of the nav bar */
-            padding: 20px; /* Add padding for readability */
-            color: #ffffff; /* Text color for better contrast */
+        .image-container {
+            margin-left: 25%;
+            position: relative;
+            width: 75%;
+            height: 100vh;
+            overflow: hidden;
         }
-        h2 {
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 255, 0.4); /* Semi-transparent blue */
+            z-index: 1; /* Ensure it layers above the image but below text */
+        }
+        header {
+            position: absolute;
+            top: 50%;
+            left: 3%;
+            transform: translateY(-50%);
+            text-align: left;
+            z-index: 2;
+            color: #fefefe;
+            font-family:'Bebas Neue';
+            font-size: 1vw;
+        }
+        header h1 {
+            font-size: 5rem;
+            margin: 0;
+        }
+
+        header h2 {
             font-family: 'Montserrat', sans-serif;
-            color: #ffffff;
+            font-size: 1.25 rem;
+            margin: 10px 0 0;
         }
     </style>
 </head>
 
 <body>
-    <main>
-        <header>
-            <h1>Edinburgh Flood Risk</h1>
-            <h2>Impact of Environmental Deprivation on Flood Mitigation in Greenspaces Across Edinburgh</h2>
-        </header>
-    </main>
+        <div class="image-container">
+            <img src="https://github.com/ave-uhhh/CGS-Webmap/blob/main/edioverviewimg.jpg?raw=true" alt="Aerial View of Edinburgh">
+            <header>
+                <h1>Flood Management</h1>
+                <h2>The Impact of Environmental Deprivation on <br>Flood Risk in Greenspaces Across Edinburgh</h2>
+            </header>
+        </div>
 
     <nav>
-        <a href="#section1" id="link-section1">Edinburgh Flood Risk</a>
-        <a href="#section2" id="link-section2">Environmental Deprivation</a>
-        <a href="#section3" id="link-section3">Our Study</a>
-        <a href="#section4" id="link-section4">Flood Maps</a>
-        <a href="#section5" id="link-section5">Analysis</a>
-        <a href="#section6" id="link-section6">What's Next?</a>
+        <a href="homepage.html" id="link-section1">Home</a>
+        <a href="section1.html" id="link-section2">Environmental Deprivation</a>
+        <a href="section2.html" id="link-section3">Our Study</a>
+        <a href="#section3.html" id="link-section4">Methodology</a>
+        <a href="#section4.html" id="link-section5">Results</a>
+        <a href="#section5.html" id="link-section6">What's Next?</a>
+        <a href="section6.html" id="link-section7">References</a>
     </nav>
 
-    <script>
-        const navLinks = document.querySelectorAll("nav a");
-        function setActiveLink() {
-            navLinks.forEach(link => {
-                const section = document.querySelector(link.getAttribute("href"));
-                const rect = section.getBoundingClientRect();
-                if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-                    link.classList.add("active");
-                } else {
-                    link.classList.remove("active");
-                }
-            });
-        }
-        window.addEventListener("scroll", setActiveLink);
-        setActiveLink();
-    </script>
-
-<main>
     <div class="content">
         <section id="section2">
-            <h2>Environmental Deprivation</h2>
-            <p>Example text</p>
+            <h2>Our Study</h2>
+            <p>Introduce our study and its relevance.
+                Explain why we chose what metrics we did.</p>
         </section>
     </div>
-</main>
 
 </body>
 </html>
