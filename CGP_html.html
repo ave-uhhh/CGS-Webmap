@@ -1,0 +1,100 @@
+<!DOCTYPE html> 
+<html> 
+<head>
+<meta charset="UTF-8">
+<title>An example leaflet map</title> 
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""></script>
+
+</head>
+<body>
+    <p><a href="http://leafletjs.com/">Leaflet</a> was used to make this webmap about flood management in Edinburgh</p> 
+    <div style="height: 550px;" id="mapid"></div>
+
+</body>
+<script>
+"use strict";
+let drummondSt = L.latLng(55.948162, -3.184111);
+let kb = L.latLng(55.923998, -3.174950); 
+let map = L.map('mapid').setView(L.latLng(55.948162, -3.184111), 12);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', 
+{     maxZoom: 19,     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map); 
+
+var geojsonFeature = {
+    "type": "Feature",
+    "properties": {
+        "name": "Edinburgh",
+        "type": "City",
+        "popupContent": "This is the centre of Edinburgh"
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-3.184, 55.9481]
+    }
+};
+
+L.geoJSON(geojsonFeature, {
+    onEachFeature: function (feature, layer) {
+        if (feature.properties && feature.properties.popupContent) {
+            layer.bindPopup(feature.properties.popupContent);
+        }
+    }
+}).addTo(map);
+
+var geojsonPolygon = {
+    "type": "Feature",
+    "properties": {
+        "name": "Sample Area",
+        "amenity": "Public Park",
+        "popupContent": "This is a public park."
+    },
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [ // polygon example
+                [-3.185, 55.950],  
+                [-3.185, 55.952],
+                [-3.180, 55.952],
+                [-3.180, 55.950],
+                [-3.185, 55.950]
+            ]
+        ]
+    }
+};
+
+L.geoJSON(geojsonPolygon, {
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(feature.properties.popupContent);
+    },
+    style: function (feature) {
+        return {color: 'green', fillColor: '#8EE9FF'};
+    }
+}).addTo(map);
+
+fetch('/geojson/30most_geojson_output.json')
+.then(response => response.json())
+.then(data => {
+    L.geoJSON(data, {
+        onEachFeature: function (feature, layer) {
+    if (feature.properties && feature.properties.popupContent) {
+        layer.bindPopup(feature.properties.popupContent);
+    }
+    }
+    }).addTo(map);
+})
+.catch(err => console.error('Error loading the GeoJSON from external source', err));
+
+
+
+// let drummondStMarker = L.marker(drummondSt).addTo(map);
+// let kbMarker = L.marker(kb).addTo(map); 
+// drummondStMarker.bindPopup("<b>This is Drummond St!</b>");
+// kbMarker.bindPopup("<b>This is KB!</b>").openPopup(); 
+</script> 
+</html>
