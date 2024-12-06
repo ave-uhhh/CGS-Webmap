@@ -2,7 +2,7 @@
 <html> 
 <head>
 <meta charset="UTF-8">
-<title>Flood Management in Edinburgh</title> 
+<title>An example leaflet map</title> 
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
 integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -14,87 +14,172 @@ crossorigin=""></script>
 
 </head>
 <body>
-    <p><a href="http://leafletjs.com/">Leaflet</a> was used to make this webmap about flood management in Edinburgh</p> 
+    <p><a href="http://leafletjs.com/">Leaflet</a> was used to make this web map about flood management in Edinburgh</p> 
     <div style="height: 550px;" id="mapid"></div>
 
 </body>
 <script>
 "use strict";
-let drummondSt = L.latLng(55.948162, -3.184111);
-let kb = L.latLng(55.923998, -3.174950); 
+//let drummondSt = L.latLng(55.948162, -3.184111);
+//let kb = L.latLng(55.923998, -3.174950); 
 let map = L.map('mapid').setView(L.latLng(55.948162, -3.184111), 12);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', 
 {     maxZoom: 19,     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map); 
 
-var geojsonFeature = {
-    "type": "Feature",
-    "properties": {
-        "name": "Edinburgh",
-        "type": "City",
-        "popupContent": "This is the centre of Edinburgh"
-    },
-    "geometry": {
-        "type": "Point",
-        "coordinates": [-3.184, 55.9481]
-    }
+var geojsonURL_flood = 'https://raw.githubusercontent.com/ave-uhhh/CGS-Webmap/refs/heads/main/geojson/floodrisk_geojson_output.json'
+
+// Define a uniform style for all features
+var uniformStyle_flood = {
+    fillColor: '#2a0ced',  // A strong red to highlight features
+    color: '#000',         // Black border
+    weight: 1,             // Border thickness
+    opacity: 1,            // Border opacity
+    fillOpacity: 0.8       // Fill opacity
 };
 
-L.geoJSON(geojsonFeature, {
-    onEachFeature: function (feature, layer) {
-        if (feature.properties && feature.properties.popupContent) {
-            layer.bindPopup(feature.properties.popupContent);
-        }
-    }
-}).addTo(map);
+// Using `fetch` to load GeoJSON from an external URL
+fetch(geojsonURL_flood)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        // Adding the GeoJSON layer to the map
+        L.geoJSON(data, {
+            style: uniformStyle_flood,  // Apply default style to each feature
+            onEachFeature: function (feature, layer) {
+                // Add a popup
+                if (feature.properties && feature.properties.Legend) {
+                    layer.bindPopup(feature.properties.Legend);
+                }
+            }
+        }).addTo(map);
+    })
+    .catch(function(error) {
+        console.error('Error loading the GeoJSON data: ', error);
+    });
 
-var geojsonPolygon = {
-    "type": "Feature",
-    "properties": {
-        "name": "Sample Area",
-        "amenity": "Public Park",
-        "popupContent": "This is a public park."
-    },
-    "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-            [ // polygon example
-                [-3.185, 55.950],  
-                [-3.185, 55.952],
-                [-3.180, 55.952],
-                [-3.180, 55.950],
-                [-3.185, 55.950]
-            ]
-        ]
+var geojsonURL_simd = 'https://raw.githubusercontent.com/ave-uhhh/CGS-Webmap/refs/heads/main/geojson/simd_geojson_output.json'
+
+// Define a styling function based on the decile property
+function getStyle(feature) {
+    return {
+        fillColor: getColor(feature.properties.Decilev2), // Ensure property name matches your GeoJSON
+        weight: 1,
+        opacity: 0.5,
+        color: 'white',  // Color of the border
+        fillOpacity: 0.3
+    };
+}
+// Define color based on decile value
+function getColor(Decilev2) {
+    if (Decilev2 >= 8) {
+        return '#2166ac'; // Top 30%
+    } else if (Decilev2 <= 3) {
+        return '#b2182b'; // Lowest 30%
+    } else {
+        return '#f7f7f7'; // Neutral color for others
     }
+}
+
+// Fetch and display the GeoJSON
+fetch(geojsonURL_simd)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        // Adding the GeoJSON layer to the map
+        L.geoJSON(data, {
+            style: getStyle,
+            onEachFeature: function (feature, layer) {
+                // Add a popup that could include more properties
+                if (feature.properties && feature.properties.Legend) {
+                    var popupContent = "<b>Decilev2:</b> " + feature.properties.Decilev2 +
+                                    "<br><b>Description:</b> " + feature.properties.Legend;
+                    layer.bindPopup(popupContent);
+                }
+            }
+        }).addTo(map);
+    })
+    .catch(function(error) {
+        console.error('Error loading the GeoJSON data: ', error);
+    });
+
+
+var geojsonURL_30least = 'https://raw.githubusercontent.com/ave-uhhh/CGS-Webmap/refs/heads/main/geojson/30least_geojson_output.json';
+
+var uniformStyle = {
+    fillColor: '#de2d26',  // A strong red to highlight features
+    color: '#000',         // Black border
+    weight: .1,             // Border thickness
+    opacity: 1,            // Border opacity
+    fillOpacity: 1       // Fill opacity
 };
 
-L.geoJSON(geojsonPolygon, {
-    onEachFeature: function (feature, layer) {
-        layer.bindPopup(feature.properties.popupContent);
-    },
-    style: function (feature) {
-        return {color: 'green', fillColor: '#8EE9FF'};
+// Add modifiable popup content to each feature
+function onEachFeature(feature, layer) {
+    if (feature.properties) {
+        // Create editable form content for the popup
+        var popupContent = `<h3>${feature.properties.distName1 || 'No District Name'}</h3>
+                            <p>Current Comment: ${feature.properties.comment || 'No comments yet'}</p>
+                            <form action="#" onsubmit="saveComment(event, this, '${feature.properties.distName1}')">
+                                <label for="input-comment-${feature.properties.distName1}">Add/Edit Comment:</label>
+                                <input type="text" id="input-comment-${feature.properties.distName1}" name="comment" placeholder="Enter a new comment...">
+                                <button type="submit">Save</button>
+                            </form>`;
+
+        layer.bindPopup(popupContent);
     }
-}).addTo(map);
+}
 
-fetch('/geojson/30most_geojson_output.json')
-.then(response => response.json())
-.then(data => {
-    L.geoJSON(data, {
-        onEachFeature: function (feature, layer) {
-    if (feature.properties && feature.properties.popupContent) {
-        layer.bindPopup(feature.properties.popupContent);
-    }
-    }
-    }).addTo(map);
-})
-.catch(err => console.error('Error loading the GeoJSON from external source', err));
+// Using `fetch` to load GeoJSON from an external URL
+fetch(geojsonURL_30least)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        // Adding the GeoJSON layer to the map
+        L.geoJSON(data, {
+            style: uniformStyle,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+    })
+    .catch(function(error) {
+        console.error('Error loading the GeoJSON data: ', error);
+    });
 
 
 
-// let drummondStMarker = L.marker(drummondSt).addTo(map);
-// let kbMarker = L.marker(kb).addTo(map); 
-// drummondStMarker.bindPopup("<b>This is Drummond St!</b>");
-// kbMarker.bindPopup("<b>This is KB!</b>").openPopup(); 
+var geojsonURL_30most = 'https://raw.githubusercontent.com/ave-uhhh/CGS-Webmap/refs/heads/main/geojson/30most_geojson_output.json'
+
+// Define a uniform style for all features
+var uniformStyle_most = {
+    fillColor: '#eb34e8',  // A strong red to highlight features
+    color: '#000',         // Black border
+    weight: 0.1,             // Border thickness
+    opacity: 1,            // Border opacity
+    fillOpacity: 1       // Fill opacity
+};
+
+// Using `fetch` to load GeoJSON from an external URL
+fetch(geojsonURL_30most)
+    .then(function(response) {
+        return response.json();
+    })
+    .then(function(data) {
+        // Adding the GeoJSON layer to the map
+        L.geoJSON(data, {
+            style: uniformStyle_most,  // Apply the uniform style to each feature
+            onEachFeature: function (feature, layer) {
+                // Add a popup
+                if (feature.properties && feature.properties.Legend) {
+                    layer.bindPopup(feature.properties.Legend);
+                }
+            }
+        }).addTo(map);
+    })
+    .catch(function(error) {
+        console.error('Error loading the GeoJSON data: ', error);
+    });
+
 </script> 
 </html>
