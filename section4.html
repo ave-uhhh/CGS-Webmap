@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Bebas Neue" rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel='stylesheet'>
+    <title>Flood Management</title>
+    <style>
+         body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+        nav {
+            height: 100%;
+            width: 22%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background: #000000;
+            overflow-x: hidden;
+            padding-top: 0px;
+            border: 2px solid #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .content {
+            margin-left: 22%;
+            padding: 20px;
+            color: #000000;
+        }
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+        }
+        nav a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        nav a.active-link {
+            color: #48ff75;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .dropdown {
+            position: relative;
+            width: 100%;
+        }
+        .dropdown-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5% 10%;
+        }
+        .dropdown-header a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 18px;
+            flex-grow: 1;
+        }
+        .dropdown-header span {
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #ffffff;
+            transition: transform 0.3s ease;
+            visibility: visible;
+        }
+        .dropdown-header span.hidden {
+            visibility: hidden;
+        }
+        .dropdown-header span.open {
+            transform: rotate(180deg);
+        }
+        .dropdown-content {
+            display: none;
+            background-color: #333333;
+            z-index: 2;
+            padding-left: 5%;
+        }
+        .dropdown-content a {
+            padding: 8px 16px;
+            text-decoration: none;
+            display: block;
+            color: #ffffff;
+        }
+        .dropdown-content a:hover {
+            background-color: #575757;
+        }
+        header {
+           text-align: left;
+           color: #000000;
+           font-family:'Bebas Neue';
+           font-size: 1vw;
+           margin-bottom: 20px;
+       }
+        header h1 {
+            font-size: 5rem;
+            margin: 0;
+        }
+        header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.25 rem;
+            margin: 10px 0 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="dropdown">
+            <div class="dropdown-header">
+                <a href="homepage.html">Home</a>
+                <span class="hidden"></span>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-header">
+                <a href="section2.html">Our Study</a>
+                <span></span>
+            </div>
+            <div class="dropdown-content">
+                <a href="section2.html">Environmental Deprivation</a>
+                <a href="section2.html">Flood Risk</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-header">
+                <a href="section3.html">Methodology</a>
+                <span></span>
+        </div>
+            <div class="dropdown-content">
+                <a href="section3.html">Site Selection</a>
+                <a href="section3.html">Map Digitisation</a>
+                <a href="section3.html">Scoring System</a>
+                <a href="section3.html">Correlation Analysis</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-header">
+                <a href="section4.html" class="active-link">Findings</a>
+                <span></span>
+            </div>
+            <div class="dropdown-content">
+                <a href="section4.html">Conclusions</a>
+                <a href="section4.html">Further Research</a>
+                <a href="section4.html">Limitations</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-header">
+                <a href="section5.html">Map</a>
+                <span class="hidden"></span>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <div class="dropdown-header">
+                <a href="section6.html">About</a>
+                <span></span>
+            </div>
+            <div class="dropdown-content">
+                <a href="section6.html">Our Team</a>
+                <a href="section6.html">Documentation</a>
+                <a href="section6.html">Report</a>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        const dropdownHeaders = document.querySelectorAll('.dropdown-header');
+
+        dropdownHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const triangle = header.querySelector('span');
+
+                content.style.display = content.style.display === 'block' ? 'none' : 'block';
+
+                triangle.classList.toggle('open');
+            });
+        });
+    </script>
+
+    <div class="content">
+        <section id="section4">
+            <header><h1>Findings</h1></header>
+            <h2>Conclusions</h2>
+            <p>Words blah</p>
+            <h2>Further Research</h2>
+            <p>hehe haha</p>
+            <h2>Limitations</h2>
+            <p>ughhhh</p>
+        </section>
+    </div>
+
+</body>
+</html>
+    
