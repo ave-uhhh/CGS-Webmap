@@ -126,8 +126,8 @@
                 <span></span>
             </div>
             <div class="dropdown-content">
-                <a href="section2.html">Environmental Deprivation</a>
-                <a href="section2.html">Flood Risk</a>
+                <a href="section2.html#environmental-deprivation">Environmental Deprivation</a>
+                <a href="section2.html#flood-risk">Flood Risk</a>
             </div>
         </div>
 
@@ -137,23 +137,21 @@
                 <span></span>
         </div>
             <div class="dropdown-content">
-                <a href="section3.html">Site Selection</a>
-                <a href="section3.html">Map Digitisation</a>
-                <a href="section3.html">Scoring System</a>
-                <a href="section3.html">Correlation Analysis</a>
+                <a href="section3.html#site-selection">Site Selection</a>
+                <a href="section3.html#map-digitisation">Map Digitisation</a>
+                <a href="section3.html#scoring-system">Scoring System</a>
+                <a href="section3.html#correlation-analysis">Correlation Analysis</a>
             </div>
         </div>
 
-        <div class="dropdown">
-            <div class="dropdown-header">
-                <a href="section4.html" class="active-link">Findings</a>
-                <span></span>
-            </div>
-            <div class="dropdown-content">
-                <a href="section4.html">Conclusions</a>
-                <a href="section4.html">Further Research</a>
-                <a href="section4.html">Limitations</a>
-            </div>
+        <div class="dropdown-header">
+            <a href="section4.html" class="active-link">Findings</a>
+            <span></span>
+        </div>
+        <div class="dropdown-content">
+            <a href="section4.html#conclusions">Conclusions</a>
+            <a href="section4.html#further-research">Further Research</a>
+            <a href="section4.html#limitations">Limitations</a>
         </div>
 
         <div class="dropdown">
@@ -169,24 +167,42 @@
                 <span></span>
             </div>
             <div class="dropdown-content">
-                <a href="section6.html">Our Team</a>
-                <a href="section6.html">Documentation</a>
-                <a href="section6.html">Report</a>
+                <a href="section6.html#documentation">Documentation</a>
+                <a href="section6.html#report">Report</a>
             </div>
         </div>
     </nav>
 
     <script>
         const dropdownHeaders = document.querySelectorAll('.dropdown-header');
-
         dropdownHeaders.forEach(header => {
             header.addEventListener('click', () => {
                 const content = header.nextElementSibling;
                 const triangle = header.querySelector('span');
+    
+                if (content) {
+                    const isVisible = content.style.display === 'block';
+                    content.style.display = isVisible ? 'none' : 'block';
+                    triangle?.classList.toggle('open', !isVisible);
+                }
+            });
+        });
+    
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
 
-                content.style.display = content.style.display === 'block' ? 'none' : 'block';
+                if (href.includes("#") && !href.startsWith("#")) {
+                    return;
+                }
 
-                triangle.classList.toggle('open');
+                if (href.startsWith("#")) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
             });
         });
     </script>
@@ -194,11 +210,11 @@
     <div class="content">
         <section id="section4">
             <header><h1>Findings</h1></header>
-            <h2>Conclusions</h2>
+            <h2 id="conclusions">Conclusions</h2>
             <p>Words blah</p>
-            <h2>Further Research</h2>
+            <h2 id="further-research">Further Research</h2>
             <p>hehe haha</p>
-            <h2>Limitations</h2>
+            <h2 id="limitations">Limitations</h2>
             <p>ughhhh</p>
         </section>
     </div>
