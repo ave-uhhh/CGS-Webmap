@@ -1,60 +1,46 @@
-// Check if Leaflet is loaded
-if (typeof L === 'undefined') {
-    console.error("Leaflet not loaded. Check if the script is included correctly.");
-} else {
-    // Initialize the map
-    const map = L.map('map').setView([55.9432, -3.1579], 15); // Center around Inch Park
+// Initialize the map
+const map = L.map('map').setView([55.9250, -3.1599], 16); // Center around Inch Park
 
-    // Add OpenStreetMap tile layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
+// Add ESRI Satellite tile layer
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoIQ, and the GIS User Community'
+}).addTo(map);
 
-    // Layer storage
-    var layers = {};
+// Layer storage
+var layers = {};
 
-    // Function to load GeoJSON layers
-    async function loadGeoJSON(layerName) {
-        return new Promise((resolve, reject) => {
-            const url = `inchparkgeojson/${layerName}.geojson`; // Path to GeoJSON files
-            console.log(`Fetching GeoJSON from: ${url}`); // Log the URL
-            fetch(url)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Network response was not ok: ${response.statusText}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log(`Loaded GeoJSON data for ${layerName}:`, data); // Log loaded data
-                    const layer = L.geoJSON(data);
-                    resolve(layer);
-                })
-                .catch(error => {
-                    console.error(`Error fetching GeoJSON for ${layerName}:`, error);
-                    reject(error);
-                });
-        });
+// Function to load GeoJSON layers
+async function loadGeoJSON(layerName) {
+    const url = `https://raw.githubusercontent.com/ave-uhhh/CGS-Webmap/main/geojson_digitisation/${layerName}_geojson.json`;
+    console.log(`Fetching GeoJSON from: ${url}`);
+    const response = await fetch(url);
+    if (!response.ok) {
+        console.error(`Failed to load ${layerName}: ${response.statusText}`);
+        throw new Error(`Network response was not ok: ${response.statusText}`);
     }
+    const data = await response.json();
+    return L.geoJSON(data);
+}
 
-    // Function to toggle layers
-    async function toggleLayer(layerName) {
-        console.log(`Toggling layer: ${layerName}`);
-        if (layers[layerName]) {
-            map.removeLayer(layers[layerName]);
-            layers[layerName] = null;
-        } else {
-            layers[layerName] = await loadGeoJSON(layerName);
-            layers[layerName].addTo(map);
+// Function to show only the selected layer
+async function showLayer(layerName) {
+    // Remove all existing layers
+    for (const layer in layers) {
+        if (layers[layer]) {
+            map.removeLayer(layers[layer]);
         }
     }
-
-    // Event listeners for button clicks
-    document.getElementById('treesTab').onclick = () => toggleLayer('trees');
-    document.getElementById('grassTab').onclick = () => toggleLayer('grass');
-    document.getElementById('floodWallTab').onclick = () => toggleLayer('floodWall');
-    document.getElementById('impermeableTab').onclick = () => toggleLayer('impermeable');
-    document.getElementById('outlineTab').onclick = () => toggleLayer('outline');
-    document.getElementById('riverTab').onclick = () => toggleLayer('river');
-    document.getElementById('waterGateTab').onclick = () => toggleLayer('waterGate');
+    // Load and add the selected layer
+    layers[layerName] = await loadGeoJSON(layerName);
+    layers[layerName].addTo(map);
 }
+
+// Event listeners for button clicks
+document.getElementById('outlineTab').onclick = () => showLayer('inchpark_outline');
+document.getElementById('floodWallTab').onclick = () => showLayer('inchpark_floodwall');
+document.getElementById('waterGateTab').onclick = () => showLayer('inchpark_watergate');
+document.getElementById('riverTab').onclick = () => showLayer('inchpark_river');
+document.getElementById('treesTab').onclick = () => showLayer('inchpark_trees');
+document.getElementById('grassTab').onclick = () => showLayer('inchpark_grass');
+document.getElementById('impermeableTab').onclick = () => showLayer('inchpark_impermeable');

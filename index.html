@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #map { height: 600px; }
+        #controls { margin: 10px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="controls">
+        <button id="outlineTab">Inch Park Area</button>
+        <button id="floodWallTab">Flood Wall</button>
+        <button id="waterGateTab">Water Gates</button>
+        <button id="riverTab">River</button>
+        <button id="treesTab">Trees</button>
+        <button id="grassTab">Grass</button>
+        <button id="impermeableTab">Impermeable</button>
+    </div>
+
+    <!-- Load Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Load Proj4 and Proj4Leaflet -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.2/proj4.js"></script>
+    <script src="https://unpkg.com/proj4leaflet@1.0.2/dist/proj4leaflet.js"></script>
+    <!-- Load your custom JS -->
+    <script src="js/script.js"></script>
+
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([55.9250, -3.1599], 16); // Center around Inch Park
+
+        // Function to load GeoJSON layers
+        async function loadGeoJSON(layerName) {
+            const url = `https://raw.githubusercontent.com/ave-uhhh/CGS-Webmap/main/geojson_digitisation/${layerName}_geojson.json`;
+            console.log(`Fetching GeoJSON from: ${url}`);
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            const data = await response.json();
+            return L.geoJSON(data);
+        }
+
+        // Function to show only the selected layer
+        async function showLayer(layerName) {
+            // Remove all existing layers
+            for (const layer in layers) {
+                if (layers[layer]) {
+                    map.removeLayer(layers[layer]);
+                }
+            }
+            // Load and add the selected layer
+            layers[layerName] = await loadGeoJSON(layerName);
+            layers[layerName].addTo(map);
+        }
+
+    </script>
+</body>
+</html>
