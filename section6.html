@@ -10,6 +10,7 @@
          body {
             margin: 0;
             font-family: 'Montserrat', sans-serif;
+            line-height: 1.5;
         }
         nav {
             height: 100%;
@@ -107,6 +108,33 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 1.25 rem;
             margin: 10px 0 0;
+        }
+        header h3 {
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 5px;
+        }
+        .pdf {
+        width: 100%;
+        aspect-ratio: 4 / 3;
+        }
+        .pdf,
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .column {
+            padding: 10px;
+            
+        }
+        .column p {
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -210,10 +238,37 @@
     <div class="content">
         <section id="section6">
             <header><h1>About</h1></header>
+            <h2 id="team-members">Our Team</h2>
+                <p>Our team from the University of Edinburgh's School of Geosciences designed this study and developed the 
+                    web experience as part of the 2024 Capital Greenspace Project.</p>
+                <section class="container">
+                    <div class="column">
+                        <h3>Ava Corry-Roberts</h3>
+                        <p>Front-end Web Design<br>s2502571@ed.ac.uk</p>
+                        <h3>Tianze Li</h3>
+                        <p>Back-end Web Design<br>s2650891@ed.ac.uk</p>
+                    </div>
+                    <div class="column">
+                        <h3>Kelsey Green</h3>
+                        <p>Map Design<br>s2765385@ed.ac.uk</p>
+                        <h3>Hiolam Vong</h3>
+                        <p>Map Design<br>s2750370@ed.ac.uk</p>
+                    </div>
+                    <div class="column">
+                        <h3>Jessica Zenger</h3>
+                        <p>Content Writing<br>s2606850@ed.ac.uk</p>
+                    </div>
+                </section>
             <h2 id="documentation">Documentation</h2>
-            <p>hehe haha</p>
+            <iframe class="pdf" 
+                src=""
+                width="800" height="500">
+            </iframe>
             <h2 id="report">Report</h2>
-            <p>ughhhh</p>
+            <iframe class="pdf" 
+                src="group6report.pdf"
+                width="800" height="500">
+            </iframe>
         </section>
     </div>
 
